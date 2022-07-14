@@ -1,8 +1,4 @@
-from os import environ as env
-from testing.test import start
-__TEST = env['TEST']
+from database.structure_db import filling
+from database.structure_db import migration
 
-if __TEST:
-    start()
-else:
-    pass
+migration

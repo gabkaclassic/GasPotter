@@ -63,7 +63,3 @@ __QUERY_SAVE_COEFFICIENTS = '''
 __QUERY_COPY = '''
     COPY {0} FROM '{1}' WITH (FORMAT {2}, DELIMITER '{3}' {4});
 '''
-
-# check_clients(2)
-# update_total_coefficients()
-# initialize_db()

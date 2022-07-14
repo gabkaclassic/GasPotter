@@ -1,5 +1,4 @@
 import psycopg2 as ps
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from os import environ as env
 
 __USER = env['DB_USER']
@@ -7,9 +6,11 @@ __PASSWORD = env['DB_PASSWORD']
 __HOST = env['DB_HOST']
 __PORT = env['DB_PORT']
 
+__connection = None
+
 
 def request(query):
-    global connection
+
     result = []
 
     try:
@@ -17,10 +18,14 @@ def request(query):
                                 password=__PASSWORD,
                                 host=__HOST,
                                 port=__PORT)
-        connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cursor = connection.cursor()
         cursor.execute(query)
-        result = cursor.fetchall()
+        connection.commit()
+
+        if str(query).strip().startswith('SELECT'):
+            result = cursor.fetchall()
+        else:
+            return
 
     except Exception as error:
         print("Error PostgreSQL")
