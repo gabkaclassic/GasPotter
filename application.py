@@ -1,4 +1,5 @@
-from database.structure_db import filling
 from database.structure_db import migration
+from ui import showing
 
 migration
+showing
