@@ -34,7 +34,6 @@ def update_total_coefficients(create=False):
 
 
 def update_db(path=DEFAULT_IN_PATH + '\\' + DEFAULT_FILE, format='CSV', delimiter=';', header=True):
-    print(path)
     file = Path(path)
     if file.exists():
         db.request(QUERY_COPY.format(DATA_TABLE, path, format, delimiter, ', HEADER' if header else ''))

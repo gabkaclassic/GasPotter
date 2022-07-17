@@ -10,6 +10,7 @@ from datetime import datetime as dt
 class Ui_Frame(object):
     DEFAULT_IN_PATH = env['DEFAULT_INPUT_PATH']
     DEFAULT_OUT_PATH = env['DEFAULT_OUTPUT_PATH']
+    DEFAULT_IN_FILE = env['DEFAULT_FILE']
     suspects = []
 
     def setupUi(self, Frame):
@@ -219,5 +220,13 @@ class Ui_Frame(object):
             self.CorrelationLabel.setText('Корреляция: ???% - вы ввели летний месяц')
 
     def load_data(self):
-        path = self.LoadFileDialog.getExistingDirectory(options=QFileDialog.DirectoryOnly)[0]
+        self.LoadFileDialog.setDirectory(self.DEFAULT_IN_PATH)
+        self.LoadFileDialog.setNameFilter("*.csv")
+        self.LoadFileDialog.setViewMode(QFileDialog.Detail)
+
+        try:
+            path = QFileDialog.getOpenFileName(self.LoadFileDialog, "Выбрать файл").strip()
+        except:
+            path = self.DEFAULT_IN_PATH + '\\' + self.DEFAULT_IN_FILE
+
         update_db(path=path)
