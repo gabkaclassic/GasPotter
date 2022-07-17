@@ -1,11 +1,10 @@
 from os import environ as env
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
-
 from database.data.analize import check_clients
 from database.structure_db.filling import update_db
 from utilities.files import write_lines
+from datetime import datetime as dt
 
 
 class Ui_Frame(object):
@@ -121,7 +120,7 @@ class Ui_Frame(object):
         self.LoadLabel.setObjectName("LoadLabel")
 
         self.DateLabel = QtWidgets.QLabel(Frame)
-        self.DateLabel.setGeometry(QtCore.QRect(10, 60, 211, 47))
+        self.DateLabel.setGeometry(QtCore.QRect(10, 50, 291, 47))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(12)
@@ -154,26 +153,30 @@ class Ui_Frame(object):
         self.AnalizeFileDialog.setDirectory(self.DEFAULT_OUT_PATH)
         self.AnalizeFileDialog.setFileMode(QFileDialog.DirectoryOnly)
 
-        self.DateEdit = QtWidgets.QDateEdit(Frame)
-        self.DateEdit.setGeometry(QtCore.QRect(240, 70, 121, 31))
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Maximum)
-        sizePolicy.setHorizontalStretch(15)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.DateEdit.sizePolicy().hasHeightForWidth())
-        self.DateEdit.setSizePolicy(sizePolicy)
+        self.MonthBox = QtWidgets.QSpinBox(Frame)
+        self.MonthBox.setGeometry(QtCore.QRect(300, 60, 51, 31))
         font = QtGui.QFont()
         font.setFamily("Times New Roman")
         font.setPointSize(11)
         font.setBold(True)
+        font.setItalic(False)
         font.setWeight(75)
-        self.DateEdit.setFont(font)
-        self.DateEdit.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.DateEdit.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.DateEdit.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
-        self.DateEdit.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.DateEdit.setAlignment(QtCore.Qt.AlignCenter)
-        self.DateEdit.setCalendarPopup(True)
-        self.DateEdit.setObjectName("DateEdit")
+        self.MonthBox.setFont(font)
+        self.MonthBox.setAlignment(QtCore.Qt.AlignCenter)
+        self.MonthBox.setObjectName("MonthBox")
+        self.MonthBox.setRange(1, 12)
+        self.MonthBox.setValue(dt.now().month)
+
+        self.CorrelationLabel = QtWidgets.QLabel(Frame)
+        self.CorrelationLabel.setGeometry(QtCore.QRect(10, 90, 291, 16))
+        font = QtGui.QFont()
+        font.setFamily("Times New Roman")
+        font.setPointSize(10)
+        font.setBold(True)
+        font.setItalic(True)
+        font.setWeight(75)
+        self.CorrelationLabel.setFont(font)
+        self.CorrelationLabel.setObjectName("CorrelationLabel")
 
         self.retranslateUi(Frame)
         QtCore.QMetaObject.connectSlotsByName(Frame)
@@ -183,13 +186,13 @@ class Ui_Frame(object):
         Frame.setWindowTitle(_translate("GasPotter", "GasPotter"))
         self.SelectFileButton.setText(_translate("Frame", "Загрузить новые данные\n"
                                                           "(только CSV-файлы)"))
-        self.DateLabel.setText(_translate("Frame", "Выберите дату (месяц и год):"))
-        self.DateEdit.setDisplayFormat(_translate("Frame", "MM/yyyy"))
+        self.DateLabel.setText(_translate("Frame", "Выберите номер месяца (не летнего):"))
         self.AnalizeButton.setText(_translate("Frame", "Проанализировать данные"))
         self.AnalizeLabel.setText(_translate("Frame", "Анализ данных"))
         self.StrictLabel.setText(_translate("Frame", "Строгость оценки:"))
         self.LoadLabel.setText(_translate("Frame", "Загрузка данных"))
         self.StrictEdit.setText(_translate("Frame", str(self.StrictSlider.value())))
+        self.CorrelationLabel.setText(_translate("Frame", "Корреляция:"))
 
     def change_strict_edit(self):
         self.StrictEdit.setText(str(self.StrictSlider.value() / 10))
@@ -205,9 +208,15 @@ class Ui_Frame(object):
 
     def search_suspects(self):
 
-        path = QFileDialog.getExistingDirectory(self.AnalizeFileDialog, "Выбрать папку")
-        suspects = check_clients(self.DateEdit.calendarWidget().monthShown(), self.StrictSlider.value() / 10)
-        write_lines(path, suspects)
+        path = QFileDialog.getExistingDirectory(self.AnalizeFileDialog, "Выбрать папку").strip()
+        if self.MonthBox.value() not in [6, 7, 8]:
+            result = check_clients(self.MonthBox.value(), self.StrictSlider.value() / 10)
+            suspects = result['suspects']
+            trust = result['trust']
+            self.CorrelationLabel.setText('Корреляция: {0}%'.format(int(trust * 100)))
+            write_lines(self.DEFAULT_OUT_PATH if len(path) == 0 else path, suspects)
+        else:
+            self.CorrelationLabel.setText('Корреляция: ???% - вы ввели летний месяц')
 
     def load_data(self):
         path = self.LoadFileDialog.getExistingDirectory(options=QFileDialog.DirectoryOnly)[0]

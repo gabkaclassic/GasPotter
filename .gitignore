@@ -1,4 +1,8 @@
 *.idea
 *.xml
 *.pyc
+.env
+suspects.txt
+*.csv
 ui1.py
+*.spec

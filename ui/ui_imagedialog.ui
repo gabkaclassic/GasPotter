@@ -45,37 +45,10 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>60</y>
-     <width>211</width>
+     <y>50</y>
+     <width>291</width>
      <height>47</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Times New Roman</family>
-     <pointsize>12</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="text">
-    <string>Выберите дату (месяц и год):</string>
-   </property>
-  </widget>
-  <widget class="QDateEdit" name="dateEdit">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>70</y>
-     <width>121</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-     <horstretch>15</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
    </property>
    <property name="font">
     <font>
@@ -85,26 +58,8 @@
      <bold>true</bold>
     </font>
    </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
-   </property>
-   <property name="focusPolicy">
-    <enum>Qt::NoFocus</enum>
-   </property>
-   <property name="contextMenuPolicy">
-    <enum>Qt::PreventContextMenu</enum>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="displayFormat">
-    <string>M/yyyy</string>
-   </property>
-   <property name="calendarPopup">
-    <bool>true</bool>
+   <property name="text">
+    <string>Выберите номер месяца (не летнего):</string>
    </property>
   </widget>
   <widget class="QPushButton" name="AnalizeButton">
@@ -261,6 +216,50 @@
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QSpinBox" name="MonthBox">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>60</y>
+     <width>51</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>11</pointsize>
+     <weight>75</weight>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="CorrelationLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>151</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Times New Roman</family>
+     <pointsize>10</pointsize>
+     <weight>75</weight>
+     <italic>true</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Корреляция:</string>
    </property>
   </widget>
  </widget>

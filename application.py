@@ -1,5 +1,5 @@
-from database.structure_db import migration
-from ui import showing
+# from database.structure_db import migration
+import ui.showing as show
 
-migration
-showing
+# migration
+show

@@ -2,6 +2,7 @@ from numpy import mean
 import utilities.postgres as db
 from database.tables import DATA_TABLE, TEMPERATURE_TABLE, COEFFICIENTS_TABLE
 
+
 def check_clients(month, strict):
     coefficients = db.request(QUERY_GET_COEFFICIENTS.format(COEFFICIENTS_TABLE, month))[0]
     coefficient = coefficients[0]
@@ -23,7 +24,7 @@ def check_clients(month, strict):
     suspects = list(filter(lambda a: a is not None, map(lambda a: diff_id.get(a), diffs)))
     suspects = list(map(lambda a: str(a) + '\n', suspects))
 
-    return suspects
+    return {'suspects': suspects, 'trust': correlation}
 
 
 QUERY_GET_COEFFICIENTS = '''

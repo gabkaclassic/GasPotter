@@ -6,12 +6,11 @@ __PASSWORD = env['DB_PASSWORD']
 __HOST = env['DB_HOST']
 __PORT = env['DB_PORT']
 
-__connection = None
-
 
 def request(query):
-
     result = []
+    connection = None
+    cursor = None
 
     try:
         connection = ps.connect(user=__USER,
@@ -28,13 +27,11 @@ def request(query):
             return
 
     except Exception as error:
-        print("Error PostgreSQL")
         print(error)
         exit(0)
     finally:
         if connection:
             cursor.close()
             connection.close()
-            print("Connection was closed")
 
     return result
