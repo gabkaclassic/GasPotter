@@ -2,7 +2,9 @@ import sys
 from PyQt5.QtWidgets import QApplication, QDialog
 from ui.gui import Ui_Frame
 from ui.cui import menu
+from configuration.config import ENV
 
+GUI = ENV['GUI']
 
 def show(gui=True):
     if gui:
@@ -24,7 +26,7 @@ def start_cui():
     menu()
 
 
-func = ''
-while func != 'y' and func != 'n':
-    func = input('Вы хотите использовать графический интерфейс (аналог - консольный интерфейс)[y/n]: ')
-show(func == 'y')
+func = GUI
+# while func != 'y' and func != 'n':
+# func = input('Вы хотите использовать графический интерфейс (аналог - консольный интерфейс)[y/n]: ')
+show(GUI == 'TRUE')

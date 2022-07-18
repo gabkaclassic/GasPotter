@@ -1,12 +1,13 @@
-from os import environ as env, system as sys
+from configuration.config import ENV
+from os import system as sys
 from database.data.analize import check_clients
 from database.structure_db.filling import update_db
 from utilities.files import write_lines
 
-DEFAULT_IN_PATH = env['DEFAULT_INPUT_PATH']
-DEFAULT_OUT_PATH = env['DEFAULT_OUTPUT_PATH']
-FILENAME = env['DEFAULT_OUTPUT_FILENAME']
-DEFAULT_IN_FILE = env['DEFAULT_FILE']
+DEFAULT_IN_PATH = ENV['DEFAULT_INPUT_PATH']
+DEFAULT_OUT_PATH = ENV['DEFAULT_OUTPUT_PATH']
+FILENAME = ENV['DEFAULT_OUTPUT_FILENAME']
+DEFAULT_IN_FILE = ENV['DEFAULT_FILE']
 
 MENU = '''
 ============================================
@@ -95,6 +96,6 @@ def analyze():
 
 def clear():
     try:
-        clear()
+        sys('cls')
     except:
-        return
+        sys('clear')

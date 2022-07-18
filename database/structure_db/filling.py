@@ -1,4 +1,5 @@
 import pandas as pn
+from psycopg2.sql import SQL as sql, Identifier as ident
 import statsmodels.formula.api as sm
 import utilities.postgres as db
 from database.tables import DATA_TABLE, TEMPERATURE_TABLE,  COEFFICIENTS_TABLE, DEFAULT_IN_PATH, DEFAULT_FILE
@@ -10,7 +11,7 @@ def update_total_coefficients(create=False):
 
     for month in range(1, 13):
 
-        result = db.request(QUERY_DATA_FROM_TOTAL_COEFFICIENT.format(DATA_TABLE, TEMPERATURE_TABLE, month))
+        result = db.request(QUERY_DATA_FROM_TOTAL_COEFFICIENT.format(ident(DATA_TABLE), ident(TEMPERATURE_TABLE), ident(str(month))))
 
         value = []
         k = []
@@ -29,38 +30,38 @@ def update_total_coefficients(create=False):
         correlation = dataframe.dropna().corr()['value']['c']
 
         db.request(
-            query_template.format(COEFFICIENTS_TABLE, coefficient, intercept, correlation,
-                                  month))
+            query_template.format(ident(COEFFICIENTS_TABLE), ident(str(coefficient)), ident(str(intercept)), ident(str(correlation)),
+                                  ident(str(month))))
 
 
 def update_db(path=DEFAULT_IN_PATH + '\\' + DEFAULT_FILE, format='CSV', delimiter=';', header=True):
     file = Path(path)
     if file.exists():
-        db.request(QUERY_COPY.format(DATA_TABLE, path, format, delimiter, ', HEADER' if header else ''))
+        db.request(QUERY_COPY.format(ident(DATA_TABLE), ident(path), ident(format), ident(delimiter), ', HEADER' if ident(header) else ''))
         update_total_coefficients()
         return True
 
     return False
 
 
-QUERY_DATA_FROM_TOTAL_COEFFICIENT = '''
+QUERY_DATA_FROM_TOTAL_COEFFICIENT = sql('''
     SELECT d.value, (d.area * d_t.different) AS k
     FROM {0} AS d INNER JOIN {1} as d_t on d.date=d_t.date
     WHERE EXTRACT(MONTH FROM d.date) = {2};
-'''
+''')
 
-QUERY_UPDATE_COEFFICIENTS = '''
+QUERY_UPDATE_COEFFICIENTS = sql('''
     UPDATE {0}
     SET coefficient={1}, intercept={2}, correlation={3}
     WHERE month = {4};
-'''
+''')
 
-QUERY_SAVE_COEFFICIENTS = '''
+QUERY_SAVE_COEFFICIENTS = sql('''
     INSERT INTO {0}
     (month, coefficient, intercept, correlation) VALUES
     ({4}, {1}, {2}, {3});
-'''
+''')
 
-QUERY_COPY = '''
+QUERY_COPY = sql('''
     COPY {0} FROM '{1}' WITH (FORMAT {2}, DELIMITER '{3}' {4});
-'''
+''')

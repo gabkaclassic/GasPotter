@@ -1,14 +1,15 @@
 from numpy import mean
+from psycopg2.sql import SQL as sql, Identifier as ident
 import utilities.postgres as db
 from database.tables import DATA_TABLE, TEMPERATURE_TABLE, COEFFICIENTS_TABLE
 
 
 def check_clients(month, strict):
-    coefficients = db.request(QUERY_GET_COEFFICIENTS.format(COEFFICIENTS_TABLE, month))[0]
+    coefficients = db.request(QUERY_GET_COEFFICIENTS.format(ident(COEFFICIENTS_TABLE), ident(str(month))))[0]
     coefficient = coefficients[0]
     intercept = coefficients[1]
     correlation = coefficients[2]
-    data = db.request(QUERY_GET_DATA.format(DATA_TABLE, TEMPERATURE_TABLE, month, intercept))
+    data = db.request(QUERY_GET_DATA.format(ident(DATA_TABLE), ident(TEMPERATURE_TABLE), ident(str(month)), ident(str(intercept))))
 
     list_id = []
     list_coeff = []
@@ -27,14 +28,14 @@ def check_clients(month, strict):
     return {'suspects': suspects, 'trust': correlation}
 
 
-QUERY_GET_COEFFICIENTS = '''
+QUERY_GET_COEFFICIENTS = sql('''
     SELECT coefficient, intercept, correlation
     FROM {0}
     WHERE month = {1} 
     AND month NOT IN (6, 7, 8);
-'''
+''')
 
-QUERY_GET_DATA = '''
+QUERY_GET_DATA = sql('''
     SELECT d.id AS id,
            ABS((AVG(d.value) - {3})/(AVG(d.area * d_t.different))) AS coefficient
     FROM {0} AS d INNER JOIN {1} d_t on d.date = d_t.date
@@ -42,4 +43,4 @@ QUERY_GET_DATA = '''
     AND EXTRACT(MONTH FROM d.date) = {2} 
     AND EXTRACT(MONTH FROM d.date) NOT IN (6, 7, 8)
     GROUP BY id;
-'''
+''')

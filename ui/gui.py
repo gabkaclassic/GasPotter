@@ -1,4 +1,4 @@
-from os import environ as env
+from configuration.config import ENV
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog
 from database.data.analize import check_clients
@@ -8,9 +8,9 @@ from datetime import datetime as dt
 
 
 class Ui_Frame(object):
-    DEFAULT_IN_PATH = env['DEFAULT_INPUT_PATH']
-    DEFAULT_OUT_PATH = env['DEFAULT_OUTPUT_PATH']
-    DEFAULT_IN_FILE = env['DEFAULT_FILE']
+    DEFAULT_IN_PATH = ENV['DEFAULT_INPUT_PATH']
+    DEFAULT_OUT_PATH = ENV['DEFAULT_OUTPUT_PATH']
+    DEFAULT_IN_FILE = ENV['DEFAULT_FILE']
     suspects = []
 
     def setupUi(self, Frame):
