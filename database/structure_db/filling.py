@@ -43,7 +43,7 @@ def update_total_coefficients(create=False, tails={}):
 def update_db(path=join(DEFAULT_IN_PATH, DEFAULT_FILE), format='CSV', delimiter=';', header=True):
     file = Path(path)
     if file.exists():
-        db.request(QUERY_COPY.format(ident(DATA_TABLE), ident(path), ident(format), ident(delimiter), ', HEADER' if ident(header) else ''))
+        db.request(QUERY_COPY.format(ident(DATA_TABLE), ident(path), ident(format), ident(delimiter), ident(", HEADER") if header else ident("")))
         update_total_coefficients()
         return True
 
@@ -71,5 +71,5 @@ QUERY_SAVE_COEFFICIENTS = sql('''
 ''')
 
 QUERY_COPY = sql('''
-    COPY {0} FROM '{1}' WITH (FORMAT {2}, DELIMITER '{3}' {4});
+    COPY {0} FROM '{1}' WITH (FORMAT {2}, DELIMITER '{3}', ENCODING 'windows-1251' {4});
 ''')

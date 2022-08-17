@@ -20,7 +20,10 @@ def migration():
                 db.request(query)
             print('Table {0} was created'.format(table))
 
-    filling.update_total_coefficients(t.COEFFICIENTS_TABLE in created_tables)
+    try:
+        filling.update_total_coefficients(t.COEFFICIENTS_TABLE in created_tables)
+    except:
+        pass
     print('Coefficients was updated')
 
     if t.DATA_TABLE in created_tables:

@@ -36,7 +36,7 @@ def check_clients(month, strict=20, tails_strict=25):
 def preparing_output_data(data, coefficient, intercept, strict, tails=False):
 
     diff = std(list(map(lambda c: c.diff, data)))
-    data = list(filter(lambda c: (c.diff > diff * strict) or ((c.value < 0) and tails), data))
+    data = list(filter(lambda c: ((c.diff > diff * strict) or ((c.value < 0) and tails)), data))
 
     string = "".join(
         map(

@@ -228,9 +228,9 @@ class Ui_Frame(object):
         self.LoadFileDialog.setDirectory(self.DEFAULT_IN_PATH)
         self.LoadFileDialog.setNameFilter("*.csv")
         self.LoadFileDialog.setViewMode(QFileDialog.Detail)
-
+        path = ''
         try:
-            path = QFileDialog.getOpenFileName(self.LoadFileDialog, "Выбрать файл").strip()
+            path = QFileDialog.getOpenFileName(self.LoadFileDialog, "Выбрать файл")[0]
         except:
             path = join(self.DEFAULT_IN_PATH, self.DEFAULT_IN_FILE)
 

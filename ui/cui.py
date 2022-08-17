@@ -1,5 +1,7 @@
 import os.path
 
+from past.builtins import raw_input
+
 from configuration.config import ENV
 from os import system as sys
 from database.data.analize import check_clients
@@ -26,21 +28,20 @@ MENU = '''
 
 
 def menu():
-    func = 9
-    while func != 0:
+    fun = 1
+    while fun != 0:
         clear()
-        print(MENU)
         try:
-            func = int(input('Функция: '))
-            if func == 1:
+            fun = int(raw_input('Функция: '))
+            if fun == 1:
                 load_data()
-            elif func == 2:
+            elif fun == 2:
                 analyze()
-            elif func != 0:
+            elif fun != 0:
                 print('Пожалуйста, выберите функцию из предложенного списка')
                 continue
         except ValueError:
-            func = 9
+            fun = 9
             print('Пожалуйста, выберите функцию из предложенного списка')
             continue
     print('Выход из программы...')
